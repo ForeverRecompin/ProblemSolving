@@ -1,0 +1,104 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+    static boolean needFileInput = true;
+    static String inputFile = "in";
+
+    static class Solver {
+	int UPPER_BOUND = (int) 20000 + 1;
+	int[] N = new int[UPPER_BOUND];
+	
+	void solve(InputReader in, PrintWriter out) {
+	    int tc = in.ni();
+	    for (int route = 1; route <= tc; ++route) {
+		int n = in.ni();
+		for (int i = 0; i < n - 1; ++i) N[i] = in.ni();
+		int currentSum = N[0];
+		int ans = N[0];
+		int from = 0, to = 0, oldFrom = 0, newTo = 0;
+		for (int i = 1; i < n - 1; ++i) {
+		    if (currentSum + N[i] >= N[i]) {
+			currentSum = currentSum + N[i];
+			newTo = i;
+		    } else {
+			from = i;
+			currentSum = N[i];
+		    }
+		    if (currentSum > ans) {
+			oldFrom = from;
+			to = i;
+			ans = currentSum > 0 ? currentSum : 0;
+		    } else if (currentSum == ans) {
+			// Pick the route with the most number of stops
+			if ( (newTo - from) > (to - oldFrom)) {
+			    oldFrom = from;
+			    to = newTo;
+			}   
+		    }
+		}
+		//po(ans, oldFrom, to);
+		String result;
+		if (ans <= 0) {
+		    result = String.format("Route %d has no nice parts", route);
+		} else {
+		    result = String.format("The nicest part of route %d is between stops %d and %d", route, oldFrom + 1, to + 2);
+		}
+		po(result);
+	    }
+	    out.println(sb);
+	}
+
+	StringBuilder sb = new StringBuilder();
+	void po(Object... o) { sb.append("" + Arrays.deepToString(o) + "\n"); }
+	void po(Object o) { sb.append("" + o + "\n"); }
+
+	void jpo(Object o) { sb.append("" + o); }
+    }
+
+    static class InputReader {
+	StringTokenizer t;
+	BufferedReader br;
+
+	InputReader(InputStream is) {
+	    t = null;
+	    br = new BufferedReader(new InputStreamReader(is));
+	}
+
+	String ns() {
+	    while (t == null || !t.hasMoreTokens()) {
+		try {
+		    t = new StringTokenizer(br.readLine());
+		} catch (IOException e) {
+		    throw new RuntimeException(e);
+		}
+	    }
+	    return t.nextToken();
+	}
+
+	int ni() {
+	    return Integer.parseInt(ns());
+	}
+
+	long nl() {
+	    return Long.parseLong(ns());
+	}
+    }
+
+
+    public static void main(String[] args) {
+	InputStream is = System.in;
+	if (needFileInput) {
+	    try {
+		is = new FileInputStream(inputFile);
+	    } catch (FileNotFoundException e) {
+		throw new RuntimeException(e);
+	    }
+	}
+	InputReader in = new InputReader(is);
+	OutputStream os = System.out;
+	PrintWriter out = new PrintWriter(os);
+	new Solver().solve(in, out);
+	out.close();
+    }
+}

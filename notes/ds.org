@@ -1,0 +1,59 @@
+* Union Find with Path Compression and Union by Rank
+[2016-08-22 Mon 18:27]
+#+BEGIN_SRC java
+class UnionFind {
+    int[] parent, rank, setSize;
+    int numSets;
+
+    UnionFind(int n) {
+	numSets = n;
+	parent = new int[n];
+	rank = new int[n];
+	setSize = new int[n];
+	for (int i = 0; i < n; ++i) {
+	    p[i] = i;
+	    rank[i] = 0;
+	    setSize[i] = 1;
+	}
+    }
+
+    int find(int i) {
+	if (p[i] == i) return i;
+	else {
+	    int ret = find(p[i]);
+	    p[i] = ret;
+	    return ret;
+	}
+    }
+
+    void merge(int i, int j) {
+	int pi = find(i);
+	int pj = find(j);
+        if (pi == pj) return;
+	if (rank[pi] > rank[pj]) {
+	    parent[pj] = pi;
+	    setSize[pi] += setSize[pj];
+	} else {
+	    parent[pi] = p[j];
+	    setSize[pj] += setSize[pi];
+	    if (rank[pi] == rank[pj]) {
+		rank[pj] += 1;
+	    }
+	}
+    }
+}
+#+END_SRC
+#+TITLE: Data Structures
+#+DATE: <2016-08-22 Mon>
+#+AUTHOR: fraj
+#+EMAIL: foreverrecompin@gmail.com
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:nil
+#+OPTIONS: e:t email:nil f:t inline:t num:nil p:nil pri:nil stat:nil
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:nil todo:t |:t
+#+CREATOR: Emacs 24.5.1 (Org mode 8.2.10)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export

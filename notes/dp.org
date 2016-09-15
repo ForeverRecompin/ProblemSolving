@@ -1,0 +1,48 @@
+* Maximum Contiguous 1D Sub-Array
+[2016-08-22 Mon 05:29]
+1. Maintain two sums: a running some - currentSum and a maximal sum - maxSum. Initalize them both to the first element of the array.
+2. Iterate over the array starting from the second element:
+   - We have two choices to make here: add the element to the currentSum if adding it makes the currentSum greater. If however, adding the element
+     to the currentSum makes it lesser than it's existing value, update currentSum to this element (helps when currentSum is negative and
+     the element is non-negative)
+   - Update maxSum if currentSum exceeds the existing maxSum value.
+*** Note #1
+If the starting index and ending index of the elements of the subarray are to be found out, while updating the maxSum this information can be computed (the ending index is the current index of the element we're looking at in the array and the starting index will be the one we can save while taking a new element into consideration for currentSum in the previous step.
+
+*** Note #2
+To find the subarray with the largest width, a slight modification needs to be made in the way we update currentSum. Update currentSum if
+adding the new element makes it equal to or greater than it's existing value.
+
+#+BEGIN_SRC java
+int currentSum = N[0], maxSum = N[0], bestFrom = 0, from = 0, to = 0;
+for (int i = 1; i < n; ++i) {
+    if (currentSum + N[i] > N[i]) { // change this to >= for the largest width subarray
+	currentSum = currentSum + N[i];
+    } else {
+	from = i;
+	currentSum = N[i];
+    }
+    if (currentSum > maxSum) {
+	to = i;
+	bestFrom = from;
+	maxSum = currentSum;
+    }
+}
+print(bestFrom, to, maxSum);
+#+END_SRC
+
+
+#+TITLE: Dynamic Programming
+#+DATE: <2016-08-22 Mon>
+#+AUTHOR: fraj
+#+EMAIL: foreverrecompin@gmail.com
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:nil
+#+OPTIONS: e:t email:nil f:t inline:t num:nil p:nil pri:nil stat:nil
+#+OPTIONS: tags:t tasks:t tex:t timestamp:t toc:nil todo:t |:t
+#+CREATOR: Emacs 24.5.1 (Org mode 8.2.10)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
